@@ -31,7 +31,7 @@ extern "C" {
 #define FRAMERATE                       20U
 
 /* Hardware mode ------------------------------------------------------------*/
-/** Enable hardware handshake / slice / stream mode (1 = enabled) */
+/** Enable hardware handshake / slice / stream mode (1 = enabled, 0 = frame mode) */
 #define VENC_HW_MODE_ENABLE             1U
 
 /* Buffer placement ---------------------------------------------------------*/
@@ -55,14 +55,31 @@ extern "C" {
  */
 #define VENC_POOL_SIZE                  (64U * 1024U)
 
-/* Size of output JPEG bitstream buffer (400 KB ring buffer) */
+/* Size of output JPEG bitstream buffer (800 KB ring buffer, holds ~10-11 frames at 720p) */
 #ifndef VENC_OUTPUT_BUFFER_SIZE
-#define VENC_OUTPUT_BUFFER_SIZE         (4U * 100U * 1024U)
+#define VENC_OUTPUT_BUFFER_SIZE         (8U * 100U * 1024U)
 #endif
 
 /* JPEG Quality level (0 - 9, 9 is highest quality, 7 is standard high quality) */
 #ifndef VENC_JPEG_QLEVEL
 #define VENC_JPEG_QLEVEL                7U
+#endif
+
+/* Simulated data test mode -------------------------------------------------*/
+/** Enable simulated test pattern fed to VENC (1 = enabled, 0 = real camera) */
+#ifndef VENC_USE_SIMULATED_DATA
+#define VENC_USE_SIMULATED_DATA         0U
+#endif
+
+/** Simulated pattern types */
+#define VENC_SIM_PATTERN_COLORBAR       0U  /* SMPTE 8-color bars with moving box */
+#define VENC_SIM_PATTERN_SOLID_00       1U  /* All 0x00 */
+#define VENC_SIM_PATTERN_SOLID_FF       2U  /* All 0xFF */
+#define VENC_SIM_PATTERN_GRADIENT       3U  /* Grayscale gradient */
+#define VENC_SIM_PATTERN_NOISE          4U  /* High-frequency checkerboard */
+
+#ifndef VENC_SIM_PATTERN
+#define VENC_SIM_PATTERN                VENC_SIM_PATTERN_COLORBAR
 #endif
 
 #ifdef __cplusplus

@@ -42,7 +42,7 @@ typedef struct {
 
 /* Private define ------------------------------------------------------------*/
 #define VENC_APP_QUEUE_SIZE        15U
-#define VENC_OUTPUT_BLOCK_NBR      2U
+#define VENC_OUTPUT_BLOCK_NBR      8U
 
 /* Private macro -------------------------------------------------------------*/
 #define ALIGNED(ptr, bytes)       ((((uintptr_t)(ptr) + ((bytes) - 1U)) / (bytes)) * (bytes))
@@ -92,6 +92,116 @@ static void invalidate_dcache_region(const void *addr, uint32_t size)
   aligned_size = (uint32_t)(end - start);
   SCB_InvalidateDCache_by_Addr((void *)start, (int32_t)aligned_size);
 }
+
+/* Cache clean helper: flushes dirty CPU cache lines to SRAM before DMA reads */
+__attribute__((unused)) static void clean_dcache_region(const void *addr, uint32_t size)
+{
+  uintptr_t start;
+  uintptr_t end;
+  uint32_t aligned_size;
+
+  if ((addr == NULL) || (size == 0U))
+  {
+    return;
+  }
+
+  start = ((uintptr_t)addr) & ~((uintptr_t)31U);
+  end = ((uintptr_t)addr + (uintptr_t)size + 31U) & ~((uintptr_t)31U);
+  aligned_size = (uint32_t)(end - start);
+  SCB_CleanDCache_by_Addr((void *)start, (int32_t)aligned_size);
+}
+
+#if (defined(VENC_USE_SIMULATED_DATA) && (VENC_USE_SIMULATED_DATA == 1U))
+static void fill_simulated_frame(uint8_t *pY, uint8_t *pUV, uint32_t width, uint32_t height, uint32_t frame_idx)
+{
+  if ((pY == NULL) || (pUV == NULL) || (width == 0U) || (height == 0U))
+  {
+    return;
+  }
+
+#if (VENC_SIM_PATTERN == VENC_SIM_PATTERN_COLORBAR)
+  /* SMPTE 8-color bars: White, Yellow, Cyan, Green, Magenta, Red, Blue, Black */
+  static const uint8_t bar_Y[8]  = { 235, 210, 170, 145, 106,  81,  41,  16 };
+  static const uint8_t bar_U[8]  = { 128,  16, 166,  54, 202,  90, 240, 128 };
+  static const uint8_t bar_V[8]  = { 128, 146,  16,  34, 222, 240, 110, 128 };
+
+  uint32_t bar_width = width / 8U;
+  if (bar_width == 0U) bar_width = 1U;
+
+  /* Fill Y plane */
+  for (uint32_t y = 0U; y < height; y++)
+  {
+    uint8_t *line_ptr = pY + y * width;
+    for (uint32_t x = 0U; x < width; x++)
+    {
+      uint32_t bar = x / bar_width;
+      if (bar > 7U) bar = 7U;
+      line_ptr[x] = bar_Y[bar];
+    }
+  }
+
+  /* Fill UV semi-planar (interleaved U, V, U, V...) */
+  uint32_t uv_height = height / 2U;
+  for (uint32_t y = 0U; y < uv_height; y++)
+  {
+    uint8_t *line_ptr = pUV + y * width;
+    for (uint32_t x = 0U; x < width; x += 2U)
+    {
+      uint32_t bar = x / bar_width;
+      if (bar > 7U) bar = 7U;
+      line_ptr[x]     = bar_U[bar]; /* U */
+      line_ptr[x + 1] = bar_V[bar]; /* V */
+    }
+  }
+
+  /* Draw a moving 48x48 box across the screen to confirm live motion */
+  uint32_t box_size = 48U;
+  uint32_t max_x = (width > box_size) ? (width - box_size) : 0U;
+  uint32_t max_y = (height > box_size) ? (height - box_size) : 0U;
+  uint32_t box_x = (frame_idx * 8U) % (max_x ? max_x : 1U);
+  uint32_t box_y = (frame_idx * 4U) % (max_y ? max_y : 1U);
+
+  for (uint32_t dy = 0U; dy < box_size && (box_y + dy) < height; dy++)
+  {
+    uint8_t *line_ptr = pY + (box_y + dy) * width + box_x;
+    for (uint32_t dx = 0U; dx < box_size && (box_x + dx) < width; dx++)
+    {
+      line_ptr[dx] = 240U; /* Bright white box */
+    }
+  }
+
+#elif (VENC_SIM_PATTERN == VENC_SIM_PATTERN_SOLID_00)
+  memset(pY, 0x00, width * height);
+  memset(pUV, 0x80, width * height / 2U);
+
+#elif (VENC_SIM_PATTERN == VENC_SIM_PATTERN_SOLID_FF)
+  memset(pY, 0xFF, width * height);
+  memset(pUV, 0x80, width * height / 2U);
+
+#elif (VENC_SIM_PATTERN == VENC_SIM_PATTERN_GRADIENT)
+  for (uint32_t y = 0U; y < height; y++)
+  {
+    uint8_t *line_ptr = pY + y * width;
+    for (uint32_t x = 0U; x < width; x++)
+    {
+      line_ptr[x] = (uint8_t)((x * 255U) / width);
+    }
+  }
+  memset(pUV, 0x80, width * height / 2U);
+
+#elif (VENC_SIM_PATTERN == VENC_SIM_PATTERN_NOISE)
+  for (uint32_t y = 0U; y < height; y++)
+  {
+    uint8_t *line_ptr = pY + y * width;
+    for (uint32_t x = 0U; x < width; x++)
+    {
+      line_ptr[x] = ((x ^ y) & 0x08) ? 0xE0 : 0x20;
+    }
+  }
+  memset(pUV, 0x80, width * height / 2U);
+#endif
+}
+#endif
 
 static void release_output_block(uint32_t *block_addr)
 {
@@ -175,9 +285,14 @@ void venc_thread_func(ULONG arg)
            (unsigned int)hwcfg.maxEncodedWidth, (unsigned int)hwcfg.jpegEnabled, (unsigned int)hwcfg.busWidth);
   }
 
-  printf("VENC: venc_thread waiting for VIDEO_START_FLAG (JPEG %lux%lu Slice Mode)...\n",
+  printf("VENC: venc_thread waiting for VIDEO_START_FLAG (JPEG %lux%lu %s)...\n",
          (unsigned long)hVencJpegInstance.cfgJpeg.codingWidth,
-         (unsigned long)hVencJpegInstance.cfgJpeg.codingHeight);
+         (unsigned long)hVencJpegInstance.cfgJpeg.codingHeight,
+         IsHwHanshakeMode() ? "Slice Mode" : "Frame Mode");
+
+#if (defined(VENC_USE_SIMULATED_DATA) && (VENC_USE_SIMULATED_DATA == 1U))
+  printf("VENC: [TEST MODE] Simulated data injection ENABLED (pattern=%u)\n", (unsigned int)VENC_SIM_PATTERN);
+#endif
 
   while (1)
   {
@@ -312,6 +427,17 @@ static int encode_frame(void)
     encIn.pCr    = (const u8 *)planar_address.VAddress;
   }
 
+#if (defined(VENC_USE_SIMULATED_DATA) && (VENC_USE_SIMULATED_DATA == 1U))
+  fill_simulated_frame((uint8_t *)encIn.busLum, (uint8_t *)encIn.busCb,
+                       hVencJpegInstance.cfgJpeg.codingWidth,
+                       hVencJpegInstance.cfgJpeg.codingHeight,
+                       nb_encoded_frame);
+  clean_dcache_region((const void *)encIn.busLum,
+                      hVencJpegInstance.cfgJpeg.codingWidth * hVencJpegInstance.cfgJpeg.codingHeight);
+  clean_dcache_region((const void *)encIn.busCb,
+                      hVencJpegInstance.cfgJpeg.codingWidth * hVencJpegInstance.cfgJpeg.codingHeight / 2U);
+#endif
+
   // /* Print first 16 bytes of DCMIPP processed Y and UV data */
   // if (nb_encoded_frame < 5U || (nb_encoded_frame % 60U) == 0U)
   // {
@@ -346,7 +472,7 @@ static int encode_frame(void)
   frame_buffer.block_addr = (uint32_t *)frb_alloc(&buff_size);
   if (frame_buffer.block_addr == NULL)
   {
-    printf("VENC: failed to allocate output buffer (req=%lu)\n", (unsigned long)buff_size);
+    printf("VENC: failed to allocate output buffer (req=%lu)\n", (unsigned long)outputBlockSize);
     return -1;
   }
 

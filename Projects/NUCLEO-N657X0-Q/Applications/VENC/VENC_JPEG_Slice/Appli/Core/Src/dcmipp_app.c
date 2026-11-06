@@ -259,7 +259,15 @@ int dcmipp_config(void *luma_address)
     return -1;
   }
 
-  __HAL_DCMIPP_ENABLE_IT(&hcamera_dcmipp, DCMIPP_IT_PIPE1_LINE);
+  if (IsHwHanshakeMode())
+  {
+      __HAL_DCMIPP_ENABLE_IT(&hcamera_dcmipp, DCMIPP_IT_PIPE1_LINE);
+  }
+  else
+  {
+      __HAL_DCMIPP_DISABLE_IT(&hcamera_dcmipp, DCMIPP_IT_PIPE1_LINE);
+  }
+
   return 0;
 }
 

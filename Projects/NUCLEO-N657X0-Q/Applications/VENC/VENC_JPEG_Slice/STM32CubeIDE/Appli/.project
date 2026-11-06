@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
 	<name>VENC_JPEG_Slice_Nucleo_Appli</name>
 	<comment></comment>
@@ -32,39 +32,9 @@
 	</natures>
 	<linkedResources>
 		<link>
-			<name>Src/Core/frame_rb.c</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/Appli/Core/Src/frame_rb.c</locationURI>
-		</link>
-		<link>
-			<name>Src/Monitoring/st_monitor.c</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/Appli/Core/Src/st_monitor.c</locationURI>
-		</link>
-		<link>
-			<name>Src/Monitoring/st_monitor_bitrate.c</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/Appli/Core/Src/st_monitor_bitrate.c</locationURI>
-		</link>
-		<link>
-			<name>Src/Monitoring/st_monitor_cpu_threadx.c</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/Appli/Core/Src/st_monitor_cpu_threadx.c</locationURI>
-		</link>
-		<link>
-			<name>Src/Monitoring/time_monitor.c</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/Appli/Core/Src/time_monitor.c</locationURI>
-		</link>
-		<link>
 			<name>Drivers/BSP/stm32n6xx_nucleo.c</name>
 			<type>1</type>
 			<locationURI>PARENT-7-PROJECT_LOC/Drivers/BSP/STM32N6xx_Nucleo/stm32n6xx_nucleo.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/ThreadX/utilities/tx_execution_profile.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/threadx/utility/execution_profile_kit/tx_execution_profile.c</locationURI>
 		</link>
 		<link>
 			<name>Drivers/BSP/stm32n6xx_nucleo_bus.c</name>
@@ -1222,6 +1192,11 @@
 			<locationURI>PARENT-2-PROJECT_LOC/Appli/Core/Src/dcmipp_app.c</locationURI>
 		</link>
 		<link>
+			<name>Src/Core/frame_rb.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/Appli/Core/Src/frame_rb.c</locationURI>
+		</link>
+		<link>
 			<name>Src/Core/main.c</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/Appli/Core/Src/main.c</locationURI>
@@ -1262,9 +1237,29 @@
 			<locationURI>PARENT-2-PROJECT_LOC/Appli/Core/Src/venc_app.c</locationURI>
 		</link>
 		<link>
-			<name>Src/Core/venc_h264_config.c</name>
+			<name>Src/Core/venc_jpeg_config.c</name>
 			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/Appli/Core/Src/venc_h264_config.c</locationURI>
+			<locationURI>PARENT-2-PROJECT_LOC/Appli/Core/Src/venc_jpeg_config.c</locationURI>
+		</link>
+		<link>
+			<name>Src/Monitoring/st_monitor.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/Appli/Core/Src/st_monitor.c</locationURI>
+		</link>
+		<link>
+			<name>Src/Monitoring/st_monitor_bitrate.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/Appli/Core/Src/st_monitor_bitrate.c</locationURI>
+		</link>
+		<link>
+			<name>Src/Monitoring/st_monitor_cpu_threadx.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/Appli/Core/Src/st_monitor_cpu_threadx.c</locationURI>
+		</link>
+		<link>
+			<name>Src/Monitoring/time_monitor.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/Appli/Core/Src/time_monitor.c</locationURI>
 		</link>
 		<link>
 			<name>Src/Patch/stm32n6570_discovery_camera.c</name>
@@ -1415,6 +1410,11 @@
 			<name>Middlewares/ThreadX/port/txe_thread_secure_stack_free.c</name>
 			<type>1</type>
 			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/threadx/ports/cortex_m55/gnu/src/txe_thread_secure_stack_free.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/ThreadX/utilities/tx_execution_profile.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/threadx/utility/execution_profile_kit/tx_execution_profile.c</locationURI>
 		</link>
 		<link>
 			<name>Middlewares/USBX/CoreSystem/ux_system_error_handler.c</name>
@@ -2032,6 +2032,26 @@
 			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/VideoEncoder_EWL/ewl_impl.c</locationURI>
 		</link>
 		<link>
+			<name>Middlewares/VideoEncoder/common/encasiccontroller.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/Third_Party/VideoEncoder/source/common/encasiccontroller.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/VideoEncoder/common/encasiccontroller_v2.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/Third_Party/VideoEncoder/source/common/encasiccontroller_v2.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/VideoEncoder/common/encpreprocess.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/Third_Party/VideoEncoder/source/common/encpreprocess.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/VideoEncoder/common/encswhwregisters.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/Third_Party/VideoEncoder/source/common/encswhwregisters.c</locationURI>
+		</link>
+		<link>
 			<name>Middlewares/VideoEncoder/jpeg/EncJpeg.c</name>
 			<type>1</type>
 			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/Third_Party/VideoEncoder/source/jpeg/EncJpeg.c</locationURI>
@@ -2055,26 +2075,6 @@
 			<name>Middlewares/VideoEncoder/jpeg/JpegEncApi.c</name>
 			<type>1</type>
 			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/Third_Party/VideoEncoder/source/jpeg/JpegEncApi.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/VideoEncoder/common/encasiccontroller.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/Third_Party/VideoEncoder/source/common/encasiccontroller.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/VideoEncoder/common/encasiccontroller_v2.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/Third_Party/VideoEncoder/source/common/encasiccontroller_v2.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/VideoEncoder/common/encpreprocess.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/Third_Party/VideoEncoder/source/common/encpreprocess.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/VideoEncoder/common/encswhwregisters.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/Third_Party/VideoEncoder/source/common/encswhwregisters.c</locationURI>
 		</link>
 	</linkedResources>
 </projectDescription>
