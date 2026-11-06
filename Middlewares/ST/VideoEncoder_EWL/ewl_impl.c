@@ -722,16 +722,15 @@ __weak void EWLPoolReleaseCb(u8 **pool_ptr)
 
 void VENC_IRQHandler(void)
 {
-  u32 hw_handshake_status = READ_BIT(VENC_REG(BASE_HEncInstantInput >> 2U), (1U << 29U));
   uint32_t irq_status = VENC_REG(1U);
-  if(!hw_handshake_status && (irq_status & ASIC_STATUS_FUSE))
+  if (irq_status & ASIC_STATUS_FUSE)
   {
     VENC_REG(1U) = ASIC_STATUS_FUSE | ASIC_IRQ_LINE;
     /* read back the IRQ status to update its value */
     irq_status = VENC_REG(1U);
   }
   /* See if there are other flags than the FUSE status raised */
-  if(irq_status != 0U)
+  if ((irq_status & ~ASIC_IRQ_LINE) != 0U)
   {
     /* status flag is raised, clear the ones that the IRQ needs to clear and signal to EWLWaitHwReady */
     VENC_REG(1U) = ASIC_STATUS_SLICE_READY | ASIC_IRQ_LINE;

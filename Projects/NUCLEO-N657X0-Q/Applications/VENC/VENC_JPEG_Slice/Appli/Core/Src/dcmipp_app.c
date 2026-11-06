@@ -320,11 +320,31 @@ void dcmipp_set_memory_address(void * next_dcmipp_address)
  */
 HAL_StatusTypeDef  dcmipp_downsize(DCMIPP_HandleTypeDef *hdcmipp,int32_t pipe, int32_t camWidth,int32_t camHeight,int32_t captureWidth,int32_t captureHeight)
 {
-  /* If capture size matches sensor size, disable downscaling for 1:1 full resolution */
+  /* If capture size matches sensor size, disable downscaling and cropping for 1:1 full resolution */
   if ((camWidth == captureWidth) && (camHeight == captureHeight))
   {
+    HAL_DCMIPP_PIPE_DisableCrop(hdcmipp, pipe);
     return HAL_DCMIPP_PIPE_DisableDownsize(hdcmipp, pipe);
   }
+
+  /* If width matches and height is slightly cropped (e.g. 5MP 2592x1920 from 2592x1944),
+   * use hardware cropping instead of fractional downscaling to eliminate accumulator jitter */
+  if ((camWidth == captureWidth) && (captureHeight <= camHeight))
+  {
+    DCMIPP_CropConfTypeDef cropConf = {0};
+    cropConf.HStart = 0U;
+    cropConf.HSize  = (uint32_t)captureWidth;
+    cropConf.VStart = 0U; /* Set to 0U to align slice 0 with line 0 and macroblock boundary */
+    cropConf.VSize  = (uint32_t)captureHeight;
+
+    if (HAL_DCMIPP_PIPE_DisableDownsize(hdcmipp, pipe) != HAL_OK) return HAL_ERROR;
+    if (HAL_DCMIPP_PIPE_SetCropConfig(hdcmipp, pipe, &cropConf) != HAL_OK) return HAL_ERROR;
+    if (HAL_DCMIPP_PIPE_EnableCrop(hdcmipp, pipe) != HAL_OK) return HAL_ERROR;
+    return HAL_OK;
+  }
+
+  /* Normal downscaling for other resolutions (e.g. 1600x1200, 1280x720) */
+  HAL_DCMIPP_PIPE_DisableCrop(hdcmipp, pipe);
 
   /* Calculation explained in RM0486v2 table 354*/
 

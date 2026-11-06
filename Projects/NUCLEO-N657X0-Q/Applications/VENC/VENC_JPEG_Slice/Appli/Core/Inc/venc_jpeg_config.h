@@ -28,7 +28,7 @@ extern "C" {
 #include "stm32n6xx_hal.h"
 #include "stm32n6xx_ll_venc.h"
 #include "jpegencapi.h"
-#include "venc_jpeg_config_720p_Slice_noPSRAM.h"
+#include "venc_jpeg_config_5MP_Slice_noPSRAM.h"
 
 /* Exported types ------------------------------------------------------------*/
 

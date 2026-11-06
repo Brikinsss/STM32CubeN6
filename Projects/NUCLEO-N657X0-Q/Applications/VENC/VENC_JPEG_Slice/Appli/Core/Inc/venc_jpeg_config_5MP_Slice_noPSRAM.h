@@ -24,11 +24,11 @@ extern "C" {
 
 /* Frame dimensions and framerate -------------------------------------------*/
 /** Frame height in pixels (Sensor native height cropped/downscaled to 32-line slice boundary: 60 * 32 = 1920) */
-#define VENC_HEIGHT                     1920U
+#define VENC_HEIGHT                     1944U
 /** Frame width in pixels (Sensor native maximum width) */
 #define VENC_WIDTH                      2592U
 /** Target framerate (frames per second) */
-#define FRAMERATE                       15U
+#define FRAMERATE                       10U
 
 /* Hardware mode ------------------------------------------------------------*/
 /** Enable hardware handshake / slice / stream mode (1 = enabled) */
@@ -55,14 +55,14 @@ extern "C" {
  */
 #define VENC_POOL_SIZE                  (64U * 1024U)
 
-/* Size of output JPEG bitstream buffer (2 blocks of 400 KB = 800 KB ring buffer) */
+/* Size of output JPEG bitstream buffer (800 KB fits within 1024 KB NOCACHE_Region without PSRAM) */
 #ifndef VENC_OUTPUT_BUFFER_SIZE
 #define VENC_OUTPUT_BUFFER_SIZE         (800U * 1024U)
 #endif
 
-/* JPEG Quality level (0 - 9, 5 is recommended for 5MP no PSRAM) */
+/* JPEG Quality level (0 - 9, 3 is optimal for 5MP slice mode in internal SRAM) */
 #ifndef VENC_JPEG_QLEVEL
-#define VENC_JPEG_QLEVEL                5U
+#define VENC_JPEG_QLEVEL                2U
 #endif
 
 #ifdef __cplusplus

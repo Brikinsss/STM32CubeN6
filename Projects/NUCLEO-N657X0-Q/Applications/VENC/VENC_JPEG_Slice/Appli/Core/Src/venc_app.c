@@ -42,7 +42,7 @@ typedef struct {
 
 /* Private define ------------------------------------------------------------*/
 #define VENC_APP_QUEUE_SIZE        15U
-#define VENC_OUTPUT_BLOCK_NBR      8U
+#define VENC_OUTPUT_BLOCK_NBR      2U
 
 /* Private macro -------------------------------------------------------------*/
 #define ALIGNED(ptr, bytes)       ((((uintptr_t)(ptr) + ((bytes) - 1U)) / (bytes)) * (bytes))
@@ -365,6 +365,18 @@ static void encoder_reset(void)
   tx_thread_sleep(1U * TX_TIMER_TICKS_PER_SECOND / 1000U);
   __HAL_RCC_VENC_RELEASE_RESET();
   tx_thread_sleep(1U * TX_TIMER_TICKS_PER_SECOND / 1000U);
+  LL_VENC_Init();
+
+  /* Release previous encoder instance and re-initialize hardware registers */
+  if (encoder != NULL)
+  {
+    JpegEncRelease(encoder);
+    encoder = NULL;
+  }
+  if (encoder_prepare() != 0)
+  {
+    printf("encoder_prepare failed in encoder_reset\n");
+  }
 
   /* Resume DCMIPP after VENC reset */
   if (HAL_DCMIPP_PIPE_Resume(&hcamera_dcmipp, DCMIPP_PIPE1) != HAL_OK)
@@ -510,17 +522,17 @@ static int encode_frame(void)
         return -1;
       }
       nb_encoded_frame++;
-      // if (nb_encoded_frame <= 5U || (nb_encoded_frame % 60U) == 0U)
-      // {
-      //   const uint8_t *pJpeg = (const uint8_t *)encIn.pOutBuf;
-      //   printf("VENC: encoded JPEG frame #%lu, size=%lu bytes [16B Header]:",
-      //          (unsigned long)nb_encoded_frame, (unsigned long)frame_buffer.size);
-      //   for (uint32_t i = 0U; i < 16U && i < frame_buffer.size; i++)
-      //   {
-      //     printf(" %02X", pJpeg[i]);
-      //   }
-      //   printf("\n");
-      // }
+      if (nb_encoded_frame <= 5U || (nb_encoded_frame % 60U) == 0U)
+      {
+        const uint8_t *pJpeg = (const uint8_t *)encIn.pOutBuf;
+        printf("VENC: encoded JPEG frame #%lu, size=%lu bytes [16B Header]:",
+               (unsigned long)nb_encoded_frame, (unsigned long)frame_buffer.size);
+        for (uint32_t i = 0U; i < 16U && i < frame_buffer.size; i++)
+        {
+          printf(" %02X", pJpeg[i]);
+        }
+        printf("\n");
+      }
       break;
 
     case JPEGENC_HW_TIMEOUT:

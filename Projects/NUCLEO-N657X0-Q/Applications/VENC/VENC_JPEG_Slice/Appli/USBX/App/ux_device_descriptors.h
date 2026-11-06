@@ -458,10 +458,10 @@ uint16_t USBD_Get_Configuration_Number(uint8_t class_type, uint8_t interface_typ
 #define UVC_GUID_NV12                                 0x3231564EU
 #define UVC_GUID_H264                                 0x34363248U
 
-#define UVC_FRAME_WIDTH                               1280U
-#define UVC_FRAME_HEIGHT                              720U
-#define UVC_CAM_FPS_FS                                15U
-#define UVC_CAM_FPS_HS                                20U
+#define UVC_FRAME_WIDTH                               2592U
+#define UVC_FRAME_HEIGHT                              1944U
+#define UVC_CAM_FPS_FS                                10U
+#define UVC_CAM_FPS_HS                                10U
 
 #define UVC_MIN_BIT_RATE(n)                           ((uint32_t)(UVC_FRAME_WIDTH * UVC_FRAME_HEIGHT * (n)))
 #define UVC_MAX_BIT_RATE(n)                           ((uint32_t)(UVC_FRAME_WIDTH * UVC_FRAME_HEIGHT * (n)))
