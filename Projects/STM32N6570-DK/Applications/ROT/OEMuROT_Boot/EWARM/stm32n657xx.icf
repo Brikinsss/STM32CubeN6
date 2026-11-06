@@ -1,0 +1,32 @@
+#include "region_defs.h"
+
+define memory mem with size = 4G;
+
+define region ROM_region = mem:[from BL2_CODE_START to BL2_CODE_LIMIT];
+define region JUMP_region = mem:[from BL2_JUMP_CODE_START to BL2_JUMP_CODE_LIMIT];
+define region RAM_region = mem:[from BL2_DATA_START to BL2_DATA_LIMIT];
+define region RAM_STACK_region = mem:[from 0x38004000 to 0x38007FFF];
+
+define block CSTACK with alignment = 8, size = BL2_MSP_STACK_SIZE { };
+define block HEAP with alignment = 8, size = BL2_HEAP_SIZE { };
+
+initialize by copy { readwrite };
+do not initialize  { section .noinit };
+
+define block JUMP_CODE with fixed order, alignment = 8 {
+                                readonly section .BL2_Jump_Code,
+                                readonly section .BL2_Jump_Data,
+                                readonly object stm32n6xx_hal_cortex.o,
+                                readonly object stm32n6xx_hal_mce.o,
+                                readonly object stm32n6xx_hal_bsec.o,
+                                readonly object low_level_mce.o,
+                                readonly object low_level_otp.o,
+                                readonly section .BL2_Error_Code};
+
+place at address mem:BL2_CODE_START { readonly section .intvec };
+
+place in ROM_region   { readonly };
+place in JUMP_region { block JUMP_CODE };
+place in RAM_STACK_region   { block CSTACK };
+place in RAM_region   { readwrite, section .noncacheable,
+                        block HEAP };

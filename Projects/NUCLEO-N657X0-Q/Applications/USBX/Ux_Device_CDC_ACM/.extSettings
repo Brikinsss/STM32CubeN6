@@ -1,0 +1,9 @@
+[ProjectFiles]
+HeaderPath=../../../../../../Drivers/BSP/STM32N6xx_Nucleo;../../../../../../Drivers/BSP/Components/tcpp0203
+[Others]
+Define=TCPP0203_SUPPORT
+HALModule=I2C;UART
+[Groups]
+Drivers/BSP/STM32N6xx_Nucleo=../../../../../../Drivers/BSP/STM32N6xx_Nucleo/stm32n6xx_nucleo.c;../../../../../../Drivers/BSP/STM32N6xx_Nucleo/stm32n6xx_nucleo_usbpd_pwr.c;../../../../../../Drivers/BSP/STM32N6xx_Nucleo/stm32n6xx_nucleo_bus.c;
+Drivers/BSP/Components=../../../../../../Drivers/BSP/Components/tcpp0203/tcpp0203.c;../../../../../../Drivers/BSP/Components/tcpp0203/tcpp0203_reg.c;
+Doc=../README.md;

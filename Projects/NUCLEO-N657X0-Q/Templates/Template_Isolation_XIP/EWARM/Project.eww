@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<workspace>
+  <project>
+    <path>$WS_DIR$\AppliNonSecure\Template_Isolation_XIP_AppliNonSecure.ewp</path>
+  </project><project>
+    <path>$WS_DIR$\FSBL\Template_Isolation_XIP_FSBL.ewp</path>
+  </project><project>
+    <path>$WS_DIR$\AppliSecure\Template_Isolation_XIP_AppliSecure.ewp</path>
+  </project>
+  <batchBuild />
+</workspace>

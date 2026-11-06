@@ -1,0 +1,7 @@
+[ProjectFiles]
+HeaderPath=..\FSBL\Inc
+[Others]
+Define=
+HALModule=GPIO
+[Groups]
+Doc=../README.md;

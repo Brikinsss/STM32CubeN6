@@ -1,0 +1,10 @@
+[ProjectFiles]
+HeaderPath=..\..\..\..\..\..\Drivers\BSP\STM32N6xx_Nucleo
+[Others]
+Define=
+HALModule=GPIO
+[Groups]
+Doc=../README.md;
+Drivers/BSP/STM32N6570-NUCLEO=../../../../../../Drivers/BSP/STM32N6xx_Nucleo/stm32n6xx_nucleo.c;
+         
+

@@ -1,0 +1,6 @@
+[Appli:ProjectFiles]
+HeaderPath=..\..\..\..\..\..\Drivers\BSP\STM32N6570-DK
+[Groups]
+Doc=../README.md;
+[Appli:Groups]
+Drivers/BSP/STM32N6570-DK=../../../../../../Drivers/BSP/STM32N6570-DK/stm32n6570_discovery.c;

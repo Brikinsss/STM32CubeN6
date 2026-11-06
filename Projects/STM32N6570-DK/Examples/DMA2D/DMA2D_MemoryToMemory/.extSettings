@@ -1,0 +1,9 @@
+[ProjectFiles]
+HeaderPath=..\..\..\..\..\..\Drivers\BSP\STM32N6570-DK
+[Others]
+Define=
+HALModule=RIF
+[Groups]
+Doc=../README.md;
+Drivers/STM32N6xx_HAL_Driver=../../../../../../Drivers/STM32N6xx_HAL_Driver/Src/stm32n6xx_hal_rif.c;
+Drivers/BSP/STM32N6570-DK=../../../../../../Drivers/BSP/STM32N6570-DK/stm32n6570_discovery.c;

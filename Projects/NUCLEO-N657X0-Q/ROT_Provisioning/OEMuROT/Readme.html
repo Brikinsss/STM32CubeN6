@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>README</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <link rel="stylesheet" href="../../../../_htmresc/mini-st_2020.css" />
+</head>
+<body>
+<h2 id="rot_provisioning-oemurot-description"><b>ROT_Provisioning
+OEMuROT description</b></h2>
+<p>This section provides an overview of the available scripts for
+OEMuROT.</p>
+<p>OEMuROT stands for “OEM Updatable Root of Trust” and it provides two
+services:</p>
+<ul>
+<li>Secure Boot: Verification of the integrity, and authenticity of the
+application code before any execution.</li>
+<li>Secure Firmware Update: If a new firmware image is available on
+detection, check of its authenticity. Once the firmware is decrypted,
+check of the integrity of the code before installing it.</li>
+</ul>
+<h3 id="keywords"><b>Keywords</b></h3>
+<p>OEMuROT, Root Of Trust, Security, mcuboot</p>
+<h3 id="directory-contents"><b>Directory contents</b></h3>
+<p><b>Sub-directories</b></p>
+<ul>
+<li>OEMuROT/Binary Output binaries and generated images.</li>
+<li>OEMuROT/Config OEMuROT configuration files.</li>
+<li>OEMuROT/Images Images configuration files.</li>
+<li>OEMuROT/Keys Keys for firmware image authentication and
+encryption.</li>
+</ul>
+<p><b>Scripts</b></p>
+<ul>
+<li>OEMuROT/da_programming.bat/.sh Program DA password hash into
+OTP.</li>
+<li>OEMuROT/flash_programming.bat/.sh Programs images on the
+device.</li>
+<li>OEMuROT/keys_generation.bat/.sh Generate OEMuROT new keys.</li>
+<li>OEMuROT/keys_programming.bat/.sh Programs OEMuROT keys into
+OTP.</li>
+<li>OEMuROT/provisioning.bat/.sh Performs device provisioning
+process.</li>
+</ul>
+<h3 id="hardware-and-software-environment"><b>Hardware and Software
+environment</b></h3>
+<ul>
+<li><p>This example runs on STM32N657xx devices.</p></li>
+<li><p>This example has been tested with STMicroelectronics
+NUCLEO-N657X0-Q (MB1940) board and can be easily tailored for STM32N6xx
+devices by following these steps (more details in the wiki article <a
+href="https://wiki.st.com/stm32mcu/wiki/Security:How_to_create_ROT_examples_for_STM32N6"><b>How
+to create ROT examples for STM32N6</b></a>).</p></li>
+</ul>
+<h3 id="how-to-use-it"><b>How to use it ?</b></h3>
+<p>The .bat scripts are designed for Windows, whereas the .sh scripts
+are designed for Linux and Mac-OS.</p>
+<p>During the <strong>provisioning process</strong>, the programming
+scripts and the application files will be automatically updated
+according to OEMuRoT configuration.</p>
+<p>The <strong>provisioning process</strong>
+(OEMuROT/provisioning.bat/.sh) is divided into 3 majors steps:</p>
+<ul>
+<li>Step 0: Preliminary stage</li>
+<li>Step 1: Configuration management</li>
+<li>Step 2: Image generations</li>
+<li>Step 3: Provisioning</li>
+</ul>
+<p>The provisioning script is relying on flash_programming script.</p>
+<p>In the /Config/ folder, two password files are provided:</p>
+<ul>
+<li><strong>DA_password.bin</strong>: This file contains only the
+password and is used to program the password hash in OTPs.</li>
+<li><strong>password.bin</strong>: This file contains the password
+preceded by a header and is intended for use with STM32CubeProgrammer to
+enable non-secure debug.</li>
+</ul>
+<p>For more details, refer to STM32N6 Wiki articles:</p>
+<ul>
+<li><a
+href="https://wiki.st.com/stm32mcu/wiki/Security:OEMuRoT_for_STM32N6">OEMuRoT
+for STM32N6</a></li>
+<li><a
+href="https://wiki.st.com/stm32mcu/wiki/Security:How_to_start_with_OEMuRoT_on_STM32N6_MCUs">How
+to start with OEMuRoT on STM32N6 MCUs</a></li>
+</ul>
+<h3 id="notes"><b>Notes</b></h3>
+<p>Two versions of AppliCfg (used during <strong>provisioning
+process</strong>) are available: windows executable and python
+version.<br> On Windows environment, the executable is used. On other
+environment, the python version is automatically used.<br> To use Python
+version, it is needed to:</p>
+<ul>
+<li><p>have python installed (Python 3.6 or newer) and available in
+execution path variable</p></li>
+<li><p>have required python modules installed
+(Utilities/PC_Software/ROT_AppliConfig/requirements.txt):</p>
+<pre><code>  pip install -r requirements.txt</code></pre></li>
+</ul>
+</body>
+</html>

@@ -1,0 +1,68 @@
+/*###ICF### Section handled by ICF editor, don't touch! ****/
+/*-Editor annotation file-*/
+/* IcfEditorFile="$TOOLKIT_DIR$\config\ide\IcfEditor\cortex_v1_0.xml" */
+
+/*-Memory Regions-*/
+//define region DTCM_region     = mem:[from 0x20000000 to 0x2001FFFF];  // 128K
+//define region ITCM_region     = mem:[from 0x10000000 to 0x1000FFFF];  // 64K
+//define region SRAM1_region    = mem:[from 0x34000000 to 0x34063FFF];  // 400K
+//define region SRAM1_region    = mem:[from 0x34064000 to 0x340FFFFF];  // 624K
+//define region SRAM2_region    = mem:[from 0x34100000 to 0x341FFFFF];  // 1MB 
+//define region SRAM3_region    = mem:[from 0x34200000 to 0x3426FFFF];  // 448K
+//define region SRAM4_region    = mem:[from 0x34270000 to 0x342DFFFF];  // 448K
+//define region SRAM5_region    = mem:[from 0x342E0000 to 0x3434FFFF];  // 448K
+//define region SRAM6_region    = mem:[from 0x34350000 to 0x343BFFFF];  // 448K
+                                                                      // ----
+                                                                      // 3408K
+/*-Sizes-*/
+define symbol __region_ITCM_start__  = 0x10000000;
+define symbol __region_ITCM_end__    = 0x1000FFFF;
+define symbol __region_DTCM_start__  = 0x30000000;
+define symbol __region_DTCM_end__    = 0x3001FFFF;
+
+export symbol __region_DTCM_start__;
+export symbol __region_DTCM_end__;
+
+define symbol __ICFEDIT_size_cstack__    = 4K;
+define symbol __ICFEDIT_size_heap__      = 150K;
+
+define symbol __ICFEDIT_intvec_start__ = 0x34000400;
+
+define memory mem with size = 4G;
+define region ITCM_Region     = mem:[from 0x10000000 to  0x1000FFFF]; // 128K
+define region DTCM_Region     = mem:[from 0x30000000 to  0x3001FFFF]; // 128K
+define region RO_Region       = mem:[from 0x34000400 to  0x3407D3FF]; // 500
+define region RW_Region       = mem:[from 0x3407D400 to  0x3410BBFF]; // 570K
+define region NOCACHE_Region  = mem:[from 0x3410BC00 to  0x343BFFFF]; // 2769K
+define region PSRAM_region    = mem:[from 0x90000000 to  0x91FFFFFF];
+
+define block CSTACK    with alignment = 8, size = __ICFEDIT_size_cstack__   { };
+define block HEAP      with alignment = 8, size = __ICFEDIT_size_heap__     { };
+
+initialize by copy { readwrite };
+do not initialize  { section .noinit };
+do not initialize  { section .psram_bss };
+
+place at address mem:__ICFEDIT_intvec_start__ { readonly section .intvec };
+
+
+place in RO_Region       { readonly};   
+place in DTCM_Region     { block CSTACK };
+place in RW_Region       { readwrite,  block HEAP };    
+place in NOCACHE_Region  { section .noncacheable };      
+place in PSRAM_region    { readwrite section .psram_bss };
+
+define exported symbol __ro_region_start__ = start(RO_Region);
+define exported symbol __ro_region_end__   = end(RO_Region) + 1 ;
+
+define exported symbol __rw_region_start__ = start(RW_Region);
+define exported symbol __rw_region_end__   = end(RW_Region) + 1;
+
+define exported symbol __nocache_region_start__ = start(NOCACHE_Region);
+define exported symbol __nocache_region_end__   = end(NOCACHE_Region) + 1;
+
+define exported symbol __psram_region_start__ = start(PSRAM_region);
+define exported symbol __psram_region_end__   = end(PSRAM_region) + 1;
+
+
+

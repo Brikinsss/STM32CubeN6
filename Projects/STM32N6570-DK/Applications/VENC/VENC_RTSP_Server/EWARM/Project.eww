@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<workspace>
+    <project>
+        <path>$WS_DIR$\FSBL\FSBL.ewp</path>
+    </project>
+    <project>
+        <path>$WS_DIR$\Appli\VENC_RTSP_Server_Appli.ewp</path>
+    </project>
+    <batchBuild>
+        <batchDefinition>
+            <name>Build All</name>
+            <member>
+                <project>FSBL</project>
+                <configuration>VENC_RTSP_FSBL</configuration>
+            </member>
+            <member>
+                <project>VENC_RTSP_Server_Appli</project>
+                <configuration>VENC_PCM_RTSP_Debug</configuration>
+            </member>
+            <member>
+                <project>VENC_RTSP_Server_Appli</project>
+                <configuration>VENC_RTSP_Debug</configuration>
+            </member>
+            <member>
+                <project>VENC_RTSP_Server_Appli</project>
+                <configuration>VENC_OPUS_RTSP_Debug</configuration>
+            </member>
+        </batchDefinition>
+    </batchBuild>
+</workspace>

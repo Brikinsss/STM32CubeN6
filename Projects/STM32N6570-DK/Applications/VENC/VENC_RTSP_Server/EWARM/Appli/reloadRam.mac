@@ -1,0 +1,26 @@
+
+__var reloadCode;
+
+// This executes after the debugger resets the system
+execUserReset()
+{
+   reloadCode= 1;
+   
+}
+execUserExecutionStarted()
+{
+ if (reloadCode) 
+ {  
+   // 
+   // The code is > 0x34064000 in ram, we need to reload in ram after the reset because the MCU erase the ram after 0x34064000
+  __loadImage("$EXE_DIR$\\$TARGET_FNAME$", 0, 0);
+  __restoreSoftwareBreakpoints();
+   // #PC = __readMemory32(0x34000000, "Memory"); useless 
+   // #SP = __readMemory32(0x34000004, "Memory");
+  __message "Reload in RAM after reset \n" ;
+  // remove the flag to no reload the code between each step into or over 
+  reloadCode = 0;
+  __message "#PC () @ ", #PC:%x ,"\n";
+  __message "#SP () @ ", #SP:%x ,"\n";
+ }
+}

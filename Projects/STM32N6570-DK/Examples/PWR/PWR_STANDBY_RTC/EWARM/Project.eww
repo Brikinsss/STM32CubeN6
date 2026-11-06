@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<workspace>
+  <project>
+    <path>$WS_DIR$\Appli\PWR_STANDBY_RTC_Appli.ewp</path>
+  </project><project>
+    <path>$WS_DIR$\FSBL\PWR_STANDBY_RTC_FSBL.ewp</path>
+  </project>
+  <batchBuild />
+</workspace>

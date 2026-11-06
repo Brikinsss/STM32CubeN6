@@ -1,0 +1,8 @@
+[Appli:ProjectFiles]
+HeaderPath=..\..\..\..\..\..\Drivers\BSP\STM32N6xx_Nucleo
+[FSBL:Others]
+Define=
+HALModule=
+[Appli:Groups]
+Doc=../README.md;
+Drivers/BSP/STM32N6xx_Nucleo=../../../../../../Drivers/BSP/STM32N6xx_Nucleo/stm32n6xx_nucleo.c;

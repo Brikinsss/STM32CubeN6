@@ -1,0 +1,9 @@
+[ProjectFiles]
+HeaderPath=../Secure_nsclib
+[Others]
+Define=
+HALModule=GPIO
+[Groups]
+Doc=../README.md;
+
+

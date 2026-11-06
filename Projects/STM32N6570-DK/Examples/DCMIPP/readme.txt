@@ -1,0 +1,1 @@
+Examples of DCMIPP peripheral usage can be found in the folder \Projects\STM32N6570-DK\Applications\DCMIPP

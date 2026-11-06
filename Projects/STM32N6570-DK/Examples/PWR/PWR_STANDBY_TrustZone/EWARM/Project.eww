@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<workspace>
+    <project>
+        <path>$WS_DIR$\AppliNonSecure\PWR_STANDBY_TrustZone_AppliNonSecure.ewp</path>
+    </project>
+    <project>
+        <path>$WS_DIR$\FSBL\PWR_STANDBY_TrustZone_FSBL.ewp</path>
+    </project>
+    <batchBuild />
+</workspace>

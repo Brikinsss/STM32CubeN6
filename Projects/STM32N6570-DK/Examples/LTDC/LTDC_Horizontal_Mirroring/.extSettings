@@ -1,0 +1,11 @@
+[ProjectFiles]
+HeaderPath=..\..\..\..\..\..\Drivers\BSP\STM32N6570-DK
+[Others]
+Define=
+HALModule=GPIO
+HALModule=RIF
+[Groups]
+Doc=../README.md;
+Drivers/BSP/STM32N6570-DK=../../../../../../Drivers/BSP/STM32N6570-DK/stm32n6570_discovery.c;
+         
+
