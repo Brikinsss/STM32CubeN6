@@ -334,7 +334,7 @@ HAL_StatusTypeDef  dcmipp_downsize(DCMIPP_HandleTypeDef *hdcmipp,int32_t pipe, i
     DCMIPP_CropConfTypeDef cropConf = {0};
     cropConf.HStart = 0U;
     cropConf.HSize  = (uint32_t)captureWidth;
-    cropConf.VStart = 0U; /* Set to 0U to align slice 0 with line 0 and macroblock boundary */
+    cropConf.VStart = (((uint32_t)(camHeight - captureHeight)) / 2U) & ~1U; /* center vertically (1944-1920 => 12) */
     cropConf.VSize  = (uint32_t)captureHeight;
 
     if (HAL_DCMIPP_PIPE_DisableDownsize(hdcmipp, pipe) != HAL_OK) return HAL_ERROR;
@@ -371,7 +371,16 @@ HAL_StatusTypeDef  dcmipp_downsize(DCMIPP_HandleTypeDef *hdcmipp,int32_t pipe, i
  */
 static HAL_StatusTypeDef  dcmipp_enable_HW_Handshake(DCMIPP_HandleTypeDef *hdcmipp)
 {
-  if (HAL_DCMIPP_PIPE_SetLineWrappingConfig(hdcmipp, DCMIPP_PIPE1, DCMIPP_WRAP_ADDRESS_64_LINES) != HAL_OK)
+  uint32_t wrapLines;
+  uint32_t irqLines;
+
+  /* Wrap / line-event sizes follow VENC_LINE_BUF_DEPTH (2 => 64/32, 4 => 128/64) */
+  if (GetDCMIPPLinesConfig(&wrapLines, &irqLines) != HAL_OK)
+  {
+    return HAL_ERROR;
+  }
+
+  if (HAL_DCMIPP_PIPE_SetLineWrappingConfig(hdcmipp, DCMIPP_PIPE1, wrapLines) != HAL_OK)
   {
     return HAL_ERROR;
   }
@@ -381,6 +390,6 @@ static HAL_StatusTypeDef  dcmipp_enable_HW_Handshake(DCMIPP_HandleTypeDef *hdcmi
     return HAL_ERROR;
   }
  /* Enable line event with no interrupt to use the hardware trigger to the video encoder  */
-  MODIFY_REG(DCMIPP->P1PPCR, DCMIPP_P1PPCR_LINEMULT_Msk,DCMIPP_MULTILINE_32_LINES);
+  MODIFY_REG(DCMIPP->P1PPCR, DCMIPP_P1PPCR_LINEMULT_Msk, irqLines);
   return HAL_OK;
 }

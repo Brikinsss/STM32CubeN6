@@ -42,7 +42,9 @@ typedef struct {
 
 /* Private define ------------------------------------------------------------*/
 #define VENC_APP_QUEUE_SIZE        15U
-#define VENC_OUTPUT_BLOCK_NBR      2U
+#ifndef VENC_OUTPUT_BLOCK_NBR
+#define VENC_OUTPUT_BLOCK_NBR      4U
+#endif
 
 /* Private macro -------------------------------------------------------------*/
 #define ALIGNED(ptr, bytes)       ((((uintptr_t)(ptr) + ((bytes) - 1U)) / (bytes)) * (bytes))
@@ -496,7 +498,9 @@ static int encode_frame(void)
   encIn.outBufSize = outBufSize;
 
   /* Trigger Hardware JPEG Encode */
+  uint32_t t_enc_start = HAL_GetTick();
   ret = JpegEncEncode(encoder, &encIn, &encOut, NULL, NULL);
+  uint32_t t_enc_ms = HAL_GetTick() - t_enc_start;
 
   timeMonitor();
 
@@ -522,17 +526,17 @@ static int encode_frame(void)
         return -1;
       }
       nb_encoded_frame++;
-      if (nb_encoded_frame <= 5U || (nb_encoded_frame % 60U) == 0U)
-      {
-        const uint8_t *pJpeg = (const uint8_t *)encIn.pOutBuf;
-        printf("VENC: encoded JPEG frame #%lu, size=%lu bytes [16B Header]:",
-               (unsigned long)nb_encoded_frame, (unsigned long)frame_buffer.size);
-        for (uint32_t i = 0U; i < 16U && i < frame_buffer.size; i++)
-        {
-          printf(" %02X", pJpeg[i]);
-        }
-        printf("\n");
-      }
+      // if (nb_encoded_frame <= 5U || (nb_encoded_frame % 60U) == 0U)
+      // {
+      //   const uint8_t *pJpeg = (const uint8_t *)encIn.pOutBuf;
+      //   printf("VENC: encoded JPEG frame #%lu, size=%lu bytes, enc=%lu ms [16B Header]:",
+      //          (unsigned long)nb_encoded_frame, (unsigned long)frame_buffer.size, (unsigned long)t_enc_ms);
+      //   for (uint32_t i = 0U; i < 16U && i < frame_buffer.size; i++)
+      //   {
+      //     printf(" %02X", pJpeg[i]);
+      //   }
+      //   printf("\n");
+      // }
       break;
 
     case JPEGENC_HW_TIMEOUT:

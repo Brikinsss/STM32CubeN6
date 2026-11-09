@@ -217,8 +217,10 @@ static const struct regval inck_6Mhz_regs[] = {
 };
 
 static const struct regval framerate_10fps_regs[] = {
+  {0x3034, 0x8D},
+  {0x3035, 0x08},
   {0x3030, 0xC0},
-  {0x3031, 0x34},
+  {0x3031, 0x10},
 };
 
 static const struct regval framerate_15fps_regs[] = {

@@ -47,7 +47,9 @@
 /* HW handshake mode aka SLICE */
 #if (VENC_HW_MODE_ENABLE == 1U)
 #define CAM_NB_BUFFERS           (2U)
+#ifndef VENC_LINE_BUF_DEPTH
 #define VENC_LINE_BUF_DEPTH      (2U) /* 2 lines of 16-pixel macroblocks = 32 lines */
+#endif
 #define INPUT_FRAME_SIZE         ((uint32_t)((VENC_WIDTH * CAM_MACROBLOCK_HEIGHT * CAM_NB_BUFFERS * VENC_LINE_BUF_DEPTH * 3U) / 2U))
 #define NB_INPUT_FRAME           (1U)
 #else /* Frame mode */

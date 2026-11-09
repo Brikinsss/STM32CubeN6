@@ -57,6 +57,7 @@
 
 #define IMX335_REG_HOLD           0x3001
 #define IMX335_REG_VMAX           0x3030
+#define IMX335_REG_HMAX           0x3034
 #define IMX335_REG_SHUTTER        0x3058
 #define IMX335_REG_GAIN           0x30e8
 #define IMX335_REG_TPG            0x329e

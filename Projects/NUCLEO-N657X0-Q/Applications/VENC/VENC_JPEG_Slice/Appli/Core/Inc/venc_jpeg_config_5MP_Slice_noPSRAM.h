@@ -23,16 +23,18 @@ extern "C" {
 #endif
 
 /* Frame dimensions and framerate -------------------------------------------*/
-/** Frame height in pixels (Sensor native height cropped/downscaled to 32-line slice boundary: 60 * 32 = 1920) */
+/** Frame height: sensor 1944 lines cropped to a multiple of the 64-line slice (30 * 64 = 1920) */
 #define VENC_HEIGHT                     1944U
 /** Frame width in pixels (Sensor native maximum width) */
 #define VENC_WIDTH                      2592U
 /** Target framerate (frames per second) */
-#define FRAMERATE                       10U
+#define FRAMERATE                       10U   /* IMX335 driver supports 10/15/20/25/30 only, other values fall back to 30 */
 
 /* Hardware mode ------------------------------------------------------------*/
 /** Enable hardware handshake / slice / stream mode (1 = enabled) */
 #define VENC_HW_MODE_ENABLE             1U
+/** Line buffer depth in 16-line macroblock rows: 4 => 64-line slice event, 128-line DCMIPP ring (max supported) */
+#define VENC_LINE_BUF_DEPTH             4U
 
 /* Buffer placement ---------------------------------------------------------*/
 /** Location macro for VENC internal buffer */
@@ -55,14 +57,14 @@ extern "C" {
  */
 #define VENC_POOL_SIZE                  (64U * 1024U)
 
-/* Size of output JPEG bitstream buffer (800 KB fits within 1024 KB NOCACHE_Region without PSRAM) */
+/* Output JPEG bitstream ring buffer: 2048 KB in NOCACHE_Region (2560 KB), split into VENC_OUTPUT_BLOCK_NBR blocks */
 #ifndef VENC_OUTPUT_BUFFER_SIZE
-#define VENC_OUTPUT_BUFFER_SIZE         (800U * 1024U)
+#define VENC_OUTPUT_BUFFER_SIZE         (2048U * 1024U)
 #endif
 
 /* JPEG Quality level (0 - 9, 3 is optimal for 5MP slice mode in internal SRAM) */
 #ifndef VENC_JPEG_QLEVEL
-#define VENC_JPEG_QLEVEL                2U
+#define VENC_JPEG_QLEVEL                5U
 #endif
 
 #ifdef __cplusplus
